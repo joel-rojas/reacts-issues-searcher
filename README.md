@@ -1,5 +1,13 @@
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+### Note:
+
+In order to run the app and for security reasons, please create a .env file (Enviroment Variable) in the root folder and create a Github Personal Token by your side. The content of this file is set in this way:
+
+`REACT_APP_GH_PERSONAL_TOKEN = "yourGithubPersonalToken"`
+
+where `yourGithubPersonalToken` is the personal token. Save changes and run the app.
+
 ## Available Scripts
 
 In the project directory, you can run:
