@@ -4,7 +4,7 @@ import { IssueLabelType, ReactIssueOptionList } from "../models/ui";
 export const parseAPIIssuesListAsUIOptions = (list: RepoIssue[]): ReactIssueOptionList[] => {
     return list.map(item => (
         {
-            id: item.id,
+            id: item.number,
             label: item.title,
             issueLabelType: item.labels.map(lb => (
                 {

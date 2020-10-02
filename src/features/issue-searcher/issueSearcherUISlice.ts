@@ -4,6 +4,7 @@ import { ReactIssueOptionList } from "../../utils/models/ui";
 export interface IssueAutocompleteUIState {
     options: ReactIssueOptionList[],
     loading: boolean;
+    focus: boolean;
 }
 
 export interface IssueListUIState {
@@ -11,19 +12,34 @@ export interface IssueListUIState {
     loading: boolean;
 }
 
+export interface IssueErrorAlertUIState {
+    show: boolean;
+}
+
+export interface IssueAlertUIState {
+    error: IssueErrorAlertUIState
+}
+
 export interface IssueUIState {
     autocomplete: IssueAutocompleteUIState;
-    list: IssueListUIState
+    list: IssueListUIState,
+    alert: IssueAlertUIState
 }
 
 const initialState: IssueUIState = {
     autocomplete: {
         loading: false,
+        focus: false,
         options: []
     },
     list: {
         items: [],
         loading: false
+    },
+    alert: {
+        error: {
+            show: false
+        }
     }
 }
 
@@ -33,6 +49,9 @@ const issuesUI = createSlice({
     reducers: {
         setIssueAutocompleteLoadingFlag: (state, action:PayloadAction<boolean>) => {
             state.autocomplete.loading = Boolean(action.payload);
+        },
+        setIssueAutocompleteFocusFlag: (state, action: PayloadAction<boolean>) => {
+            state.autocomplete.focus = Boolean(action.payload);
         },
         setIssueAutocompleteUIOptions: (state, action: PayloadAction<ReactIssueOptionList[]>) => {
             if (action.payload) {
@@ -47,14 +66,19 @@ const issuesUI = createSlice({
                 state.list.items = action.payload;
             }
         },
+        setIssueErrorAlertUIFlag: (state, action: PayloadAction<boolean>) => {
+            state.alert.error.show = Boolean(action.payload);
+        }
     }
 });
 
 export const {
     setIssueAutocompleteUIOptions,
     setIssueAutocompleteLoadingFlag,
+    setIssueAutocompleteFocusFlag,
     setIssueListLoadingFlag,
     setIssueListUIOptions,
+    setIssueErrorAlertUIFlag
 } = issuesUI.actions;
 
 export default issuesUI.reducer;

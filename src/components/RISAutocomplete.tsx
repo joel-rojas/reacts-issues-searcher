@@ -1,9 +1,14 @@
-import React, { ChangeEvent, KeyboardEvent } from 'react';
+import React, { ChangeEvent, KeyboardEvent, useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { CircularProgress, createStyles, makeStyles, TextField, Theme } from '@material-ui/core';
 import { Autocomplete } from '@material-ui/lab';
-import { AvoidAutocompleteKeysList, IssuesSearchQuantity, NonInputKeys, ReactIssueOptionList, RISAutoCompleteProps } from '../utils/models/ui';
 import { RootState } from '../redux/store';
+import {
+    AvoidAutocompleteKeysList,
+    IssuesSearchQuantity,
+    ReactIssueOptionList,
+    RISAutoCompleteProps
+} from '../utils/models/ui';
 
 const useStyles = makeStyles((theme: Theme) => {
     return createStyles({
@@ -27,16 +32,25 @@ const useStyles = makeStyles((theme: Theme) => {
 });
 
 const RISAutocomplete: React.FC<RISAutoCompleteProps> = ({searchIssue, displaySelectedIssue}) => {
-    const {options, loading} = useSelector((state: RootState) => state.issuesUI.autocomplete);
+    const {autocomplete} = useSelector((state: RootState) => state.issuesUI);
+    const textFieldRef = useRef<HTMLInputElement>(null);
     const classes = useStyles();
+
+    useEffect(() => {
+        if (autocomplete.focus) {
+            textFieldRef.current?.focus();
+        } 
+    });
 
     const handleInputChange = (event: KeyboardEvent<HTMLInputElement>) => {
         const value = (event.target as HTMLInputElement).value;
-        if (event.key === AvoidAutocompleteKeysList.Enter) {
-            searchIssue(value, IssuesSearchQuantity.Big);
-            return;
+        if (value.trim().length > 0) {
+            if (event.key === AvoidAutocompleteKeysList.Enter) {
+                searchIssue(value, IssuesSearchQuantity.Big);
+                return;
+            }
+            searchIssue(value, IssuesSearchQuantity.Small);
         }
-        searchIssue(value, IssuesSearchQuantity.Small);
     };
 
     const handleItemChange = (event: ChangeEvent<{}>, value: ReactIssueOptionList|null) => {
@@ -48,22 +62,26 @@ const RISAutocomplete: React.FC<RISAutoCompleteProps> = ({searchIssue, displaySe
             <Autocomplete
                 id="risAutocomplete"
                 className={classes.autoComplete}
-                getOptionSelected={(option, value) => option.label.toLowerCase() === value.label.toLowerCase() && option.id === value.id}
+                getOptionSelected={(option, value) =>
+                    option.label.toLowerCase() === value.label.toLowerCase() && option.id === value.id
+                }
                 getOptionLabel={(option) => option.label}
-                options={options}
-                loading={loading}
+                options={autocomplete.options}
+                loading={autocomplete.loading}
                 onChange={handleItemChange}
                 renderInput={(params) => (
                     <TextField
-                    {...params}
+                        {...params}
+                        id="risAutocompleteInput"
                         label="Search issue by name"
                         onKeyUp={handleInputChange}
+                        inputRef={textFieldRef}
                         variant="outlined"
                         InputProps={{
                             ...params.InputProps,
                             endAdornment: (
                                 <>
-                                    {loading ? <CircularProgress color="inherit" size={20} /> : null}
+                                    {autocomplete.loading ? <CircularProgress color="inherit" size={20} /> : null}
                                     {params.InputProps.endAdornment}
                                 </>
                             ),

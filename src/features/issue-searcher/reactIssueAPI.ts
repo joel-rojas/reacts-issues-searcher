@@ -1,7 +1,7 @@
 const {REACT_APP_GH_PERSONAL_TOKEN} = process.env;
 
 export const fetchIssuesList = async (name: string, resultQuantity: number) => {
-    const formattedName = name.split('\ ').join('+');
+    const formattedName = name.split(/\s/).join('+');
     return fetch(`https://api.github.com/search/issues?q=${formattedName}`+
         `+type:issue+repo:facebook/react&per_page=${resultQuantity}`, {
         method: 'GET',

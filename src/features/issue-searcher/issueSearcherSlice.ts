@@ -40,9 +40,12 @@ export const fetchReactIssuesListByName = createAsyncThunk
             dispatch(setIssueSearchText(name));
             try {
                 const response = await fetchIssuesList(name, quantity);
+                if (response instanceof Error) {
+                    return rejectWithValue({error: response.message});
+                }
                 return response as IssueSearchResult;
             } catch (error) {
-                return rejectWithValue(error);
+                return rejectWithValue({error});
             }
         } else if (name === searchedText && suggestedIssues) {
             return suggestedIssues;
@@ -62,9 +65,12 @@ export const fetchReactDetailedIssueById = createAsyncThunk
         if (!selectedIssue || (selectedIssue && selectedIssue.id !== id)) {
             try {
                 const response = await fetchDetailedIssue(id);
+                if (response instanceof Error) {
+                    return rejectWithValue({error: response.message});
+                }
                 return response as RepoDetailedIssue;
             } catch (error) {
-                return rejectWithValue(error);
+                return rejectWithValue({error});
             }
         } else if (selectedIssue && selectedIssue.id === id){
             return selectedIssue;
@@ -96,6 +102,15 @@ const repoIssues = createSlice({
             state.issues = null;
             state.error = action.payload;
         },
+        resetRepoSuggestedIssuesList: (state) => {
+            state.suggestedIssues && (state.suggestedIssues = null);
+        },
+        resetRepoIssuesList: (state) => {
+            state.issues && (state.issues = null);
+        },
+        resetRepoDetailedIssue: (state) => {
+            state.selectedIssue && (state.selectedIssue = null);
+        }
     },
     extraReducers: builder => {
         builder.addCase(fetchReactIssuesListByName.pending, (state, action) => {
@@ -152,6 +167,9 @@ export const {
     getRepoDetailedIssueFailed,
     getRepoIssuesSuccess,
     getRepoIssuesFailed,
+    resetRepoSuggestedIssuesList,
+    resetRepoIssuesList,
+    resetRepoDetailedIssue
 } = repoIssues.actions;
 
 export default repoIssues.reducer;

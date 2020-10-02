@@ -3,16 +3,16 @@ import { useSelector } from 'react-redux';
 import { createStyles, makeStyles, Theme } from '@material-ui/core';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
-import { FixedSizeList, ListChildComponentProps } from 'react-window';
+import { Virtuoso } from 'react-virtuoso';
 import { RootState } from '../redux/store';
 import { IssueLabelType, ReactIssueOptionList, RISListProps } from './../utils/models/ui';
 
 const useStyles = makeStyles((theme: Theme) => {
     return createStyles({
         container: {
-            width: '100%',
+            width: 400,
             height: 400,
-            maxWidth: 300,
+            marginTop: 10,
             backgroundColor: theme.palette.background.paper,
         },
         itemColorLabel: {
@@ -34,39 +34,39 @@ const RISList: React.FC<RISListProps> = ({displaySelectedIssue}) => {
     } = useSelector((state: RootState) => state.issuesUI.list);
     const classes = useStyles();
 
-    const ListRow: React.FC<ListChildComponentProps> = ({data, style, index}) => {
-
-        const handleListItemClick = (data: ReactIssueOptionList) => {
-            displaySelectedIssue(data);
-        }
-
-        return (
-            <ListItem button style={{...style, height: 'auto'}} key={index} onClick={() => handleListItemClick(data[index])}>
-                <ListItemText
-                    primary={data[index].label}
-                    secondary={
-                        data[index].issueLabelType ?
-                            data[index].issueLabelType.map((it: IssueLabelType) => (
-                                    <span
-                                        key={it.id}
-                                        className={classes.itemColorLabel}
-                                        style={{ 
-                                            backgroundColor: `#${it.color}`
-                                        }}>
-                                        {it.title}
-                                    </span>
-                                )
-                            )
-                            : '-'}/>
-            </ListItem>
-        )
-    }
     return (
         <>
             <div className={classes.container}>
-                <FixedSizeList height={400} width={300} itemSize={46} itemData={items} itemCount={items.length}>
-                    {ListRow}
-                </FixedSizeList>
+                <Virtuoso
+                    style={{ width: '100%', height: '400px' }}
+                    totalCount={items.length}
+                    item={ index => {
+                        const data = items[index];
+                        const handleListItemClick = (data: ReactIssueOptionList) => {
+                            displaySelectedIssue(data);
+                        }
+                        return (
+                            <ListItem button key={index} onClick={() => handleListItemClick(data)}>
+                                <ListItemText
+                                    primary={data.label}
+                                    secondary={
+                                        data.issueLabelType ?
+                                            data.issueLabelType.map((it: IssueLabelType) => (
+                                                <span
+                                                    key={it.id}
+                                                    className={classes.itemColorLabel}
+                                                    style={{ 
+                                                        backgroundColor: `#${it.color}`
+                                                    }}>
+                                                    {it.title}
+                                                </span>
+                                            ))
+                                        : '-'}
+                                />
+                            </ListItem>
+                        )
+                    }}
+                />
             </div>
         </>
     );

@@ -1,5 +1,6 @@
 export interface ChildrenComponents {
-    children: React.ReactNode
+    children: React.ReactNode,
+    id: string;
 }
 
 export interface RISAutoCompleteProps {

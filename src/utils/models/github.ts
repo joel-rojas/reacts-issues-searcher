@@ -84,11 +84,13 @@ export interface RepoIssue {
 }
 
 export interface RepoDetailedIssue extends RepoIssue {
+    closed_by: GithubUser;
     assignees: GithubUser[];
     milestone: GithubRepoMilestone;
     locked: boolean;
     active_lock_reason: string;
-    closed_by: GithubUser;
+    author_association: string;
+    performed_via_github_app: string;
 }
 
 export interface IssueSearchResult {
