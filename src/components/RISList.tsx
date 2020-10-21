@@ -28,7 +28,15 @@ const useStyles = makeStyles((theme: Theme) => {
     })
 });
 
-const RISList: React.FC<RISListProps> = ({displaySelectedIssue}) => {
+/**
+ * Function Component to display UI virtualized list which represents React's issues found once user pressed 'Enter' key
+ * while typing into RISAutocomplete component. 
+ * @param {RISListProps} - Props passed to this component which represent a method to be called when a record from this list
+ * has been selected. Once a record is selected it will show a brief info of the selected React's issue by using RISInfoCard
+ * component.
+ * @author [Emerson Rojas](https://github.com/joel-rojas)
+ */
+const RISList: React.FC<RISListProps> = ({displaySelectedIssue}: RISListProps) => {
     const {
         items
     } = useSelector((state: RootState) => state.issuesUI.list);

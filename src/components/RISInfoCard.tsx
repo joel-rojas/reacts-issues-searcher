@@ -30,6 +30,11 @@ const useStyles = makeStyles({
     }
   });
 
+/**
+ * Function component which shows React's issue brief information using Material-UI Card's component structure.
+ * It's fetched data comes from App's store.
+ * @author [Emerson Rojas](https://github.com/joel-rojas)
+ */
 const RISInfoCard = () => {
     const classes = useStyles();
     const {

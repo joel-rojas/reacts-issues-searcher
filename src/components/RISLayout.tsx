@@ -13,7 +13,13 @@ const useStyles = makeStyles((theme: Theme) => {
     })
 });
 
-const RISLayout: React.FC<ChildrenComponents> = ({children, id}) => {
+/**
+ * Function Component which serve as wrapper component to render all its UI children components.
+ * @param {ChildrenComponents} - Props passed to this component which represent UI children components to be rendered
+ * and an 'id' text to be set as HTML ID attribute in its Container component. 
+ * @author [Emerson Rojas](https://github.com/joel-rojas)
+ */
+const RISLayout: React.FC<ChildrenComponents> = ({children, id}: ChildrenComponents) => {
     const dispatch = useDispatch<AppDispatch>();
     const classes = useStyles();
 

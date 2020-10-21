@@ -31,7 +31,16 @@ const useStyles = makeStyles((theme: Theme) => {
     })
 });
 
-const RISAutocomplete: React.FC<RISAutoCompleteProps> = ({searchIssue, displaySelectedIssue}) => {
+/**
+ * Function Component to render and set its UI functionality as Autocomplete component by using Material-UI's Autocomplete
+ * component. It works by constantly communicating with App's store and making API requests to Github's APIs to search
+ * React's issues by typing into its UI input.
+ * @param {RISAutoCompleteProps} - Props passed to this component which represent methods to be called within its UI events like
+ * changing input value or selecting an item from its UI list rendered once one or more records have been found through its 
+ * searching ability. 
+ * @author [Emerson Rojas](https://github.com/joel-rojas)
+ */
+const RISAutocomplete: React.FC<RISAutoCompleteProps> = ({searchIssue, displaySelectedIssue}: RISAutoCompleteProps) => {
     const {autocomplete} = useSelector((state: RootState) => state.issuesUI);
     const textFieldRef = useRef<HTMLInputElement>(null);
     const classes = useStyles();
